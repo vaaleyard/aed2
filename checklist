@@ -1,0 +1,6 @@
+panckaeort              ok
+shellsort               ok
+heapsort                ok
+bucketsort              dando segfault
+cocktailsort    
+quicksort_mediana_3 com insertion_sort
