@@ -18,7 +18,7 @@ int main (int argc, char *argv[])
     print_transactions(first_slice_transactions, slices[0]);
 
     printf("\nshell sorting by value:\n");
-    shellsort(first_slice_transactions, slices[0], cmp_valor);
+    shellsort(first_slice_transactions, slices[0], cmp_value);
     print_transactions(first_slice_transactions, slices[0]);
 
     // pancakeSort(first_slice_transactions, slices[0], cmp_id);

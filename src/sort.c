@@ -17,7 +17,7 @@ int cmp_id(Transaction *tr1, Transaction *tr2) {
     return -1;
 }
 
-int cmp_valor(Transaction *tr1, Transaction *tr2) {
+int cmp_value(Transaction *tr1, Transaction *tr2) {
     if (tr1->value > tr2->value)
         return 1;
 
@@ -42,7 +42,6 @@ int insertion_sort(Transaction *transactions, int len, cmp_func cmp) {
     return 0;
 }
 
-// no main: shellsort(first_slice_array, 5, &cmp_int);
 void shellsort(Transaction *transactions, int len, cmp_func cmp) {
     int i, j, k, h = 1;
     Transaction aux;
@@ -65,8 +64,10 @@ void shellsort(Transaction *transactions, int len, cmp_func cmp) {
     } while (h != 1);
 }
 
+/* Pancake sort */
+
 /* Reverses arr[0..i] */
-void flip(Transaction *arr, int i) {
+void pancakesort_flip(Transaction *arr, int i) {
     int start = 0;
     Transaction *temp;
     while (start < i) {
@@ -77,7 +78,7 @@ void flip(Transaction *arr, int i) {
 }
 
 /* Returns index of the maximum element in arr[0..n-1] */
-int findMax(Transaction *arr, int n, cmp_func cmp) {
+int pancakesort_findMax(Transaction *arr, int n, cmp_func cmp) {
     int mi, i;
 
     for (mi = 0, i = 0; i < n; ++i)
@@ -87,32 +88,34 @@ int findMax(Transaction *arr, int n, cmp_func cmp) {
     return mi;
 }
 
-// The main function that sorts given array using flip
+// The main function that sorts given array using pancakesort_flip
 // operations
-void pancakeSort(Transaction* arr, int n, cmp_func cmp)
+void pancakesort(Transaction* arr, int n, cmp_func cmp)
 {
     // Start from the complete array and one by one reduce
     // current size by one
     for (int curr_size = n; curr_size > 1; --curr_size) {
         // Find index of the maximum element in
         // arr[0..curr_size-1]
-        int mi = findMax(arr, curr_size, cmp);
+        int mi = pancakesort_findMax(arr, curr_size, cmp);
 
         // Move the maximum element to end of current array
         // if it's not already at the end
         if (mi != curr_size - 1) {
             // To move at the end, first move maximum number
             // to beginning
-            flip(arr, mi);
+            pancakesort_flip(arr, mi);
 
             // Now move the maximum number to end by reversing
             // current array
-            flip(arr, curr_size - 1);
+            pancakesort_flip(arr, curr_size - 1);
         }
     }
 }
 
-void heapify(Transaction arr[], int n, int i, cmp_func cmp) {
+/* Heap sort */
+
+void heapsort_heapify(Transaction arr[], int n, int i, cmp_func cmp) {
     // Find largest among root, left child and right child
     int largest = i;
     int left = 2 * i + 1;
@@ -129,27 +132,29 @@ void heapify(Transaction arr[], int n, int i, cmp_func cmp) {
     // Swap and continue heapifying if root is not largest
     if (largest != i) {
         swap(&arr[i], &arr[largest]);
-        heapify(arr, n, largest, cmp);
+        heapsort_heapify(arr, n, largest, cmp);
     }
 }
 
 // Main function to do heap sort
-void heapSort(Transaction arr[], int n, cmp_func cmp) {
+void heapsort_(Transaction arr[], int n, cmp_func cmp) {
     // Build max heap
     for (int i = n / 2 - 1; i >= 0; i--)
-        heapify(arr, n, i, cmp);
+        heapsort_heapify(arr, n, i, cmp);
 
     // Heap sort
     for (int i = n - 1; i >= 0; i--) {
         swap(&arr[0], &arr[i]);
 
         // Heapify root element to get highest element at root again
-        heapify(arr, i, 0, cmp);
+        heapsort_heapify(arr, i, 0, cmp);
     }
 }
 
+/* Bucket Sort */
+
 //Function to find maximum element of the array
-int max_element(Transaction array[], int size)
+int bucketsort_max_element(Transaction array[], int size)
 {  
     // Initializing max variable to minimum value so that it can be updated
     // when we encounter any element which is greater than it.
@@ -165,10 +170,10 @@ int max_element(Transaction array[], int size)
 }
 
 //Implementing bucket sort 
-void Bucket_Sort(Transaction array[], int size) 
+void bucketsort(Transaction array[], int size) 
 {
     //Finding max element of array which we will use to create buckets
-    int max = max_element(array, size);
+    int max = bucketsort_max_element(array, size);
 
     // Creating buckets
     int bucket[max+1];
