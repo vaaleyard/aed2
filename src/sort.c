@@ -31,15 +31,13 @@ int cmp_cpf(Transaction *tr1, Transaction *tr2) {
     return strcmp(tr1->cpf, tr2->cpf);
 }
 
-int insertion_sort(Transaction *transactions, int len, cmp_func cmp) {
+void insertionsort(Transaction *transactions, int len, cmp_func cmp) {
     for (int i = 0; i < len; i++) {
         for (int j = i; j > 0; j--) {
             if (cmp(&transactions[j - 1], &transactions[j]))
                 swap(&transactions[j-1], &transactions[j]);
         }
     }
-
-    return 0;
 }
 
 void shellsort(Transaction *transactions, int len, cmp_func cmp) {
