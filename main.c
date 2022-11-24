@@ -25,6 +25,8 @@ int main (int argc, char *argv[])
     // heapSort(first_slice_transactions, slices[0], cmp_id);
     // Bucket_Sort(first_slice_transactions, slices[0]);
 
+    printf("\n");
+    generate_table();
     free(first_slice_transactions);
     // free(second_slice_transactions);
     return 0;
