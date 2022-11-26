@@ -1,6 +1,8 @@
-panckaeort              ok
-shellsort               ok
-heapsort                ok
-bucketsort              dando segfault
-cocktailsort    
+                            id     cpf     value
+insertionsort               ok     ok       ok
+shellsort                   ok     ok       ok
+panckaeort                  ok     ok       ok
+heapsort                    ok     ok       ok
+bucketsort                  dando segfault em tudo
+cocktailsort                implementar
 quicksort_mediana_3 com insertion_sort

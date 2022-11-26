@@ -1,11 +1,12 @@
+#include <stdio.h>
 #include <string.h>
 #include <limits.h>
 #include "sort.h"
 
 void swap(Transaction *tr1, Transaction *tr2) {
-    Transaction *temp = tr1;
-    tr1 = tr2;
-    tr2 = temp;
+    Transaction temp = *tr1;
+    *tr1 = *tr2;
+    *tr2 = temp;
 }
 
 int cmp_id(Transaction *tr1, Transaction *tr2) {
@@ -28,14 +29,22 @@ int cmp_value(Transaction *tr1, Transaction *tr2) {
 }
 
 int cmp_cpf(Transaction *tr1, Transaction *tr2) {
-    return strcmp(tr1->cpf, tr2->cpf);
+    int res = strcmp(tr1->cpf, tr2->cpf);
+
+    if (res > 0)
+        return 1;
+    else if (res == 0)
+        return 0;
+
+    return -1;
 }
 
 void insertionsort(Transaction *transactions, int len, cmp_func cmp) {
     for (int i = 0; i < len; i++) {
         for (int j = i; j > 0; j--) {
-            if (cmp(&transactions[j - 1], &transactions[j]))
-                swap(&transactions[j-1], &transactions[j]);
+            if (cmp(&transactions[j - 1], &transactions[j]) == 1) {
+                swap(&transactions[j - 1], &transactions[j]);
+            }
         }
     }
 }
