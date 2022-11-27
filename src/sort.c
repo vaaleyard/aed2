@@ -158,6 +158,36 @@ void heapsort_(Transaction arr[], int n, cmp_func cmp) {
     }
 }
 
+void cocktailsort(Transaction *transaction, int len, cmp_func cmp) {
+    int swapped = 1, start = 0;
+    int end = len - 1;
+
+    while (swapped) {
+        swapped = 0;
+
+        for (int i = 0; i < end; i++) {
+            if (cmp(&transaction[i], &transaction[i + 1]) == 1) {
+                swap(&transaction[i], &transaction[i + 1]);
+                swapped = 1;
+            }
+        }
+
+        if (!swapped)
+            break;
+
+        end -= 1;
+
+        for (int i = end - 1; i < start - 1; i--) {
+            if (cmp(&transaction[i], &transaction[i + 1]) == 1) {
+                swap(&transaction[i], &transaction[i + 1]);
+                swapped = 1;
+            }
+        }
+
+        swapped = 1;
+    }
+}
+
 /* Bucket Sort */
 
 //Function to find maximum element of the array
@@ -165,9 +195,8 @@ int bucketsort_max_element(Transaction array[], int size)
 {  
     // Initializing max variable to minimum value so that it can be updated
     // when we encounter any element which is greater than it.
-    int max = INT_MIN;
-    for (int i = 0; i < size; i++)
-        {
+    int max = array[0].id;
+    for (int i = 0; i < size; i++) {
             //Updating max when array[i] is greater than max
             if (array[i].id > max)
                 max = array[i].id;
@@ -176,8 +205,8 @@ int bucketsort_max_element(Transaction array[], int size)
     return max;
 }
 
-//Implementing bucket sort 
-void bucketsort(Transaction array[], int size) 
+//Implementing bucket sort
+void bucketsort(Transaction *array, int size) 
 {
     //Finding max element of array which we will use to create buckets
     int max = bucketsort_max_element(array, size);
@@ -186,8 +215,7 @@ void bucketsort(Transaction array[], int size)
     int bucket[max+1];
 
     //Initializing buckets to zero
-    for (int i = 0; i <= max; i++)
-        bucket[i] = 0;
+    memset(bucket, 0, (max+1)*sizeof(int));
 
     // Pushing elements in their corresponding buckets
     for (int i = 0; i < size; i++)

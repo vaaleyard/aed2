@@ -14,4 +14,5 @@ void insertionsort(Transaction *transactions, int len, cmp_func cmp);
 void shellsort(struct Transaction *transactions, int len, cmp_func cmp);
 void pancakesort(Transaction* arr, int n, cmp_func cmp);
 void heapsort_(Transaction arr[], int n, cmp_func cmp);
+void cocktailsort(Transaction *transaction, int len, cmp_func cmp);
 void bucketsort(Transaction array[], int size);
