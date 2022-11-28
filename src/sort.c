@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <limits.h>
 #include "sort.h"
@@ -39,6 +40,7 @@ int cmp_cpf(Transaction *tr1, Transaction *tr2) {
     return -1;
 }
 
+/* Insertion sort */
 void insertionsort(Transaction *transactions, int len, cmp_func cmp) {
     for (int i = 0; i < len; i++) {
         for (int j = i; j > 0; j--) {
@@ -49,6 +51,7 @@ void insertionsort(Transaction *transactions, int len, cmp_func cmp) {
     }
 }
 
+/* Shell sort */
 void shellsort(Transaction *transactions, int len, cmp_func cmp) {
     int i, j, k, h = 1;
     Transaction aux;
@@ -72,8 +75,6 @@ void shellsort(Transaction *transactions, int len, cmp_func cmp) {
 }
 
 /* Pancake sort */
-
-/* Reverses arr[0..i] */
 void pancakesort_flip(Transaction *arr, int i) {
     int start = 0;
     Transaction *temp;
@@ -84,7 +85,6 @@ void pancakesort_flip(Transaction *arr, int i) {
     }
 }
 
-/* Returns index of the maximum element in arr[0..n-1] */
 int pancakesort_findMax(Transaction *arr, int n, cmp_func cmp) {
     int mi, i;
 
@@ -95,69 +95,46 @@ int pancakesort_findMax(Transaction *arr, int n, cmp_func cmp) {
     return mi;
 }
 
-// The main function that sorts given array using pancakesort_flip
-// operations
-void pancakesort(Transaction* arr, int n, cmp_func cmp)
-{
-    // Start from the complete array and one by one reduce
-    // current size by one
+void pancakesort(Transaction* arr, int n, cmp_func cmp) {
     for (int curr_size = n; curr_size > 1; --curr_size) {
-        // Find index of the maximum element in
-        // arr[0..curr_size-1]
         int mi = pancakesort_findMax(arr, curr_size, cmp);
 
-        // Move the maximum element to end of current array
-        // if it's not already at the end
         if (mi != curr_size - 1) {
-            // To move at the end, first move maximum number
-            // to beginning
             pancakesort_flip(arr, mi);
-
-            // Now move the maximum number to end by reversing
-            // current array
             pancakesort_flip(arr, curr_size - 1);
         }
     }
 }
 
 /* Heap sort */
-
 void heapsort_heapify(Transaction arr[], int n, int i, cmp_func cmp) {
-    // Find largest among root, left child and right child
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    // if (left < n && arr[left] > arr[largest])
     if (left < n && cmp(&arr[left], &arr[largest]) == 1)
         largest = left;
 
-    // if (right < n && arr[right] > arr[largest])
     if (right < n && cmp(&arr[right], &arr[largest]) == 1)
         largest = right;
 
-    // Swap and continue heapifying if root is not largest
     if (largest != i) {
         swap(&arr[i], &arr[largest]);
         heapsort_heapify(arr, n, largest, cmp);
     }
 }
 
-// Main function to do heap sort
 void heapsort_(Transaction arr[], int n, cmp_func cmp) {
-    // Build max heap
     for (int i = n / 2 - 1; i >= 0; i--)
         heapsort_heapify(arr, n, i, cmp);
 
-    // Heap sort
     for (int i = n - 1; i >= 0; i--) {
         swap(&arr[0], &arr[i]);
-
-        // Heapify root element to get highest element at root again
         heapsort_heapify(arr, i, 0, cmp);
     }
 }
 
+/* Cocktail Sort */
 void cocktailsort(Transaction *transaction, int len, cmp_func cmp) {
     int swapped = 1, start = 0;
     int end = len - 1;
@@ -189,51 +166,98 @@ void cocktailsort(Transaction *transaction, int len, cmp_func cmp) {
 }
 
 /* Bucket Sort */
-
-//Function to find maximum element of the array
-int bucketsort_max_element(Transaction array[], int size)
-{  
-    // Initializing max variable to minimum value so that it can be updated
-    // when we encounter any element which is greater than it.
-    int max = array[0].id;
+int bucketsort_max_element(int array[], int size) {  
+    int max = array[0];
     for (int i = 0; i < size; i++) {
-            //Updating max when array[i] is greater than max
-            if (array[i].id > max)
-                max = array[i].id;
+            if (array[i] > max)
+                max = array[i];
         }
-    //return the max element
+
     return max;
 }
 
-//Implementing bucket sort
-void bucketsort(Transaction *array, int size) 
-{
-    //Finding max element of array which we will use to create buckets
-    int max = bucketsort_max_element(array, size);
+void bucketsort(int array[], int len) {
+    int m, j;
+    int *bucket = malloc(bucketsort_max_element(array, len) * sizeof(int));
 
-    // Creating buckets
-    int bucket[max+1];
+    for(m = 0; m < len; m++) {
+        bucket[m] = 0;
+    }
 
-    //Initializing buckets to zero
-    memset(bucket, 0, (max+1)*sizeof(int));
+    for(m = 0; m < len; m++) {
+        bucket[array[m]] += 1;
+    }
 
-    // Pushing elements in their corresponding buckets
-    for (int i = 0; i < size; i++)
-        bucket[array[i].id]++;
-
-    // Merging buckets effectively
-    int j=0;   // j is a variable which points at the index we are updating
-    for (int i = 0; i <= max; i++)
-        {
-            // Running while loop until there is an element in the bucket
-            while (bucket[i] > 0)
-                {
-                    // Updating array and increment j          
-                    array[j++].id = i;  
-
-                    // Decreasing count of bucket element
-                    bucket[i]--;
-                }
+    for(m = 0, j = 0; m < len; m++) {
+        for (; bucket[m] > 0; ( bucket [m])--) {
+            array[j++] = m;
         }
+    }
+
+    free(bucket);
 }
 
+/* Quick sort */
+int quicksort_partition(Transaction *array, int left, int right, cmp_func cmp) {
+    int mid = (left + right) / 2;
+    Transaction a = array[left];
+    Transaction b = array[mid];
+    Transaction c = array[right];
+
+    int medianaIndice;
+    if (cmp(&a, &b) == -1) {
+        if (cmp(&b, &c) == -1) {
+            medianaIndice = mid;
+        } else {
+            if (cmp(&a, &c) == -1) {
+                medianaIndice = right;
+            } else {
+                medianaIndice = left;
+            }
+        }
+    } else {
+        if (cmp(&c, &b) == -1) {
+            medianaIndice = mid;
+        } else {
+            if (cmp(&c, &a) == -1) {
+                medianaIndice = right;
+            } else {
+                medianaIndice = left;
+            }
+        }
+    }
+
+    swap(&array[medianaIndice], &array[right]);
+
+    Transaction pivot = array[right];
+    int i = left - 1;
+    int j;
+
+    for (j = left; j <= right - 1; j++) {
+        if (cmp(&array[j], &pivot) <= 0) {
+            i = i + 1;
+            swap(&array[i], &array[j]);
+        }
+    }
+
+    swap(&array[i + 1], &array[right]);
+    return i + 1;
+}
+
+void quicksort_aux(Transaction *array, int left, int right, cmp_func cmp) {
+    if (right <= left)
+        return;
+
+    if ((right - left) < 5) {
+        insertionsort(&array[right], right - left, cmp);
+        return;
+    }
+
+    int i = quicksort_partition(array, left, right, cmp);
+    quicksort_aux(array, left, i - 1, cmp);
+    quicksort_aux(array, i + 1, right, cmp);
+}
+
+void quicksort(Transaction *array, int len, cmp_func cmp) {
+    quicksort_aux(array, 0, len, cmp);
+}

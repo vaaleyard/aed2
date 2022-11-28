@@ -1,8 +1,0 @@
-                            id     cpf     value
-insertionsort               ok     ok       ok
-shellsort                   ok     ok       ok
-panckaeort                  ok     ok       ok
-heapsort                    ok     ok       ok
-bucketsort                  ok     --       --
-cocktailsort                ok     ok       ok
-quicksort_mediana_3 com insertion_sort
