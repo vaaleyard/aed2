@@ -18,4 +18,7 @@ struct graph {
 typedef struct graph *Graph;
 
 
-Graph new_graph(int vertex_count);
+Graph graph_new(int vertex_count);
+void graph_add_edge(Graph g, int vertex_1, int vertex_2);
+void graph_add_vertex(Graph g, int new_vertex);
+void graph_print(Graph g);
