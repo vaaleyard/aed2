@@ -33,16 +33,17 @@ graph_new(int vertex_count)
 }
 
 struct adjacency_node*
-graph_add_adjacent_node(int vertex_dest, struct adjacency_node *adjnode) {
+graph_add_adjacent_node(int vertex_dest, struct adjacency_node *adjnode, int weight) {
     struct adjacency_node *anode = (struct adjacency_node*) malloc(sizeof(struct adjacency_node));
     anode->vertex = vertex_dest;
     anode->next = adjnode;
+    anode->weight = weight;
 
     return anode;
 }
 
 void
-graph_add_edge(Graph g, int vertex_1, int vertex_2)
+graph_add_edge(Graph g, int vertex_1, int vertex_2, int weight)
 {
     struct vertex_node *vertex;
     struct adjacency_node *adj;
@@ -58,17 +59,10 @@ graph_add_edge(Graph g, int vertex_1, int vertex_2)
                     return;
                 }
             }
-            vertex->adjacency_list = graph_add_adjacent_node(vertex_2, vertex->adjacency_list);
+            vertex->adjacency_list = graph_add_adjacent_node(vertex_2, vertex->adjacency_list, weight);
             g->edge_count++;
         }
     }
-}
-
-void
-graph_add_vertex(Graph g, int new_vertex)
-{
-    g->vertices = graph_create_vertex(g->vertices, new_vertex);
-    g->vertex_count++;
 }
 
 void
@@ -80,11 +74,11 @@ graph_print(Graph g)
     if (g == NULL) {
         return;
     }
-    for (vert = g->vertices; vert != NULL; vert = vert->next) {
-        printf("\nVertex %d:", vert->vertex);
 
+    for (vert = g->vertices; vert != NULL; vert = vert->next) {
         for (adj = vert->adjacency_list; adj != NULL; adj = adj->next) {
-            printf("(%d)", adj->vertex);
+            printf("%d --(%d)--> %d\n", vert->vertex, adj->weight, adj->vertex);
         }
     }
+    printf("Vertex Count: %d", g->edge_count);
 }
